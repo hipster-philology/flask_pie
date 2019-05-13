@@ -14,8 +14,5 @@ COPY setup.py requirements.txt ./
 # Install Pie and Pie Webapp requirements
 RUN pip3 install $(cat requirements.txt) \
     https://download.pytorch.org/whl/cpu/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
-    gunicorn
-RUN python3 setup.py install
-RUN python3 setup.py clean
-RUN rm -rf flask_pie && rm setup.py requirements.txt
+    gunicorn && python3 setup.py install && python3 setup.py clean && rm -rf flask_pie && rm setup.py requirements.txt
 

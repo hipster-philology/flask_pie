@@ -45,7 +45,7 @@ class GlueFormatter(Formatter):
 
         return [
             input_token,
-            lemma.upper().replace("U", "V"),
+            lemma,
             tags[self.tasks.index(self.pos_tag)],
             "|".join(
                 "{cat}={tag}".format(

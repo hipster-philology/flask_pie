@@ -186,17 +186,17 @@ class TestGenericParameters(TestCase):
 
         self.assertEqual(
             """form	lemma	POS	morph	treated_token
-latina	LATINA	NOMcom	Case=Nom|Numb=Plur	latina
-qua	QVA	ADVint	MORPH=empty	qua
-bella	BELLVM	NOMcom	Case=Nom|Numb=Plur	bella
-sunt	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
+latina	latina	NOMcom	Case=Nom|Numb=Plur	latina
+qua	qua	ADVint	MORPH=empty	qua
+bella	bellum	NOMcom	Case=Nom|Numb=Plur	bella
+sunt	sum	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
 ,	,	PUNC	MORPH=empty	,
 ,	,	PUNC	MORPH=empty	,
 .	.	PUNC	MORPH=empty	.
-svnt	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
-bella	BELLVM	NOMcom	Case=Nom|Numb=Plur	bella
+svnt	sum	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
+bella	bellum	NOMcom	Case=Nom|Numb=Plur	bella
 ,	,	PUNC	MORPH=empty	,
-sumus	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=1	sumus
+sumus	sum	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=1	sumus
 .	.	PUNC	MORPH=empty	.""",
             response.data.decode().strip().replace("\r", ""),
             "morph should be glued, original token put back in, values should be changed"

@@ -16,8 +16,8 @@ class DataIterator:
         """
         self.tokenizer = tokenizer or simple_tokenizer
         self.remove_from_input = remove_from_input
-        if not self.remove_from_input:
-            self.remove_from_input = lambda x: x, []
+        if self.remove_from_input is None:
+            self.remove_from_input = lambda x: (x, {})
 
     @staticmethod
     def remove_punctuation(sentence: List[str]) -> Tuple[List[str], List[Tuple[str, str]]]:
@@ -31,10 +31,10 @@ class DataIterator:
         >>> assert x == (['Je', 'suis', 'content', 'mais', 'fatigué'], [(',', 3), ('...', 5),
         >>>    ('"', 6), ('"', 8), ('.', 9)])
         """
-        clean, removed = [], []
+        clean, removed = [], {}
         for index, token in enumerate(sentence):
             if PUNKT.match(token):
-                removed.append((token, index))
+                removed[index] = token
             else:
                 clean.append(token)
         return clean, removed
@@ -49,20 +49,32 @@ class DataIterator:
         """
         for sentence in self.tokenizer(data, lower=lower):
             clean_sentence, removed_from_input = self.remove_from_input(sentence)
-            yield clean_sentence, len(sentence), removed_from_input
+            yield clean_sentence, len(clean_sentence), removed_from_input
 
 
-class Formatter:
+class Formatter:  # Default is TSV
     def __init__(self, tasks: List[str]):
-        self.tasks = tasks
+        self.tasks: List[str] = tasks
 
-    def format_headers(self)-> List[str]:
-        """ Format the headers """
-        return ["token"] + self.tasks
-
-    def format_line(self, token: str, tags: Iterable[str]) -> List[str]:
+    def format_line(self, token: str, tags: Iterable[str], ignored=False) -> List[str]:
         """ Format the tags"""
         return [token] + list(tags)
+
+    def write_line(self, formatted):
+        return "\t".join(formatted) + "\r\n"
+
+    def write_sentence_beginning(self) -> str:
+        return ""
+
+    def write_sentence_end(self) -> str:
+        return ""
+
+    def write_footer(self) -> str:
+        return ""
+
+    def write_headers(self)-> str:
+        """ Format the headers """
+        return self.write_line(["token"] + self.tasks)
 
 
 class MemoryzingTokenizer(object):
@@ -70,7 +82,7 @@ class MemoryzingTokenizer(object):
     def _sentence_tokenizer(string):
         for s in string.split("."):
             if s.strip():
-                yield s.strip()
+                yield s.strip() + " " + "."
 
     @staticmethod
     def _word_tokenizer(string):

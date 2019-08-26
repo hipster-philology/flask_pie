@@ -1,3 +1,4 @@
 nlp-pie==0.2.2
 flask
 pyyaml
+regex==2019.8.19

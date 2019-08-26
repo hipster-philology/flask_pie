@@ -1,6 +1,9 @@
 venv
 .git/
 env
+tests
+tests/example_model.tar
+example.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -11,7 +11,7 @@ class LatinMemoryTokenizer(MemoryzingTokenizer):
     @staticmethod
     def _word_tokenizer(string):
         for s in string.split():
-            if hasattr(s, "strip"):
+            if s.strip:
                 yield s.strip()
 
     @staticmethod

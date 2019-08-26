@@ -1,17 +1,43 @@
 from pie.tagger import simple_tokenizer
 from typing import Callable, Iterable, List, Tuple
+import string
+import re
 
 
 Tokenizer = Callable[[str, bool], Iterable[List[str]]]
+PUNKT = re.compile("^["+string.punctuation+"]+$")
 
 
 class DataIterator:
-    def __init__(self, tokenizer: Tokenizer = None):
+    def __init__(self, tokenizer: Tokenizer = None, remove_from_input: Callable = None):
         """ Iterator used to parse the text and returns bits to tag
 
         :param tokenizer: Tokenizer
         """
         self.tokenizer = tokenizer or simple_tokenizer
+        self.remove_from_input = remove_from_input
+        if not self.remove_from_input:
+            self.remove_from_input = lambda x: x, []
+
+    @staticmethod
+    def remove_punctuation(sentence: List[str]) -> Tuple[List[str], List[Tuple[str, str]]]:
+        """ Removes punctuation from a list and keeps its index
+
+        :param sentence:
+        :return: First the sentence with things removed, then the list of things to reinsert with their index
+
+        >>> from flask_pie.utils import DataIterator
+        >>> x = DataIterator.remove_punctuation(["Je", "suis", "content",",", "mais", "...", '"', "fatigué", '"', "."])
+        >>> assert x == (['Je', 'suis', 'content', 'mais', 'fatigué'], [(',', 3), ('...', 5),
+        >>>    ('"', 6), ('"', 8), ('.', 9)])
+        """
+        clean, removed = [], []
+        for index, token in enumerate(sentence):
+            if PUNKT.match(token):
+                removed.append((token, index))
+            else:
+                clean.append(token)
+        return clean, removed
 
     def __call__(self, data: str, lower: bool = False) -> Iterable[Tuple[List[str], int]]:
         """ Default iter data takes a text, an option to make lower
@@ -22,7 +48,8 @@ class DataIterator:
         :yields: (Sentence as a list of word, Size of the sentence)
         """
         for sentence in self.tokenizer(data, lower=lower):
-            yield sentence, len(sentence)
+            clean_sentence, removed_from_input = self.remove_from_input(sentence)
+            yield clean_sentence, len(sentence), removed_from_input
 
 
 class Formatter:
@@ -53,7 +80,6 @@ class MemoryzingTokenizer(object):
 
     @staticmethod
     def _replacer(inp: str):
-        inp = inp.replace("U", "V").replace("v", "u").replace("J", "I").replace("j", "i")
         return inp
 
     def __init__(self, sentence_tokenizer=None, word_tokenizer=None, replacer=None):

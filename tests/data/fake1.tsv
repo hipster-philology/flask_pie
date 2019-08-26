@@ -1,0 +1,9 @@
+token	Case	Deg	Dis	Gend	Mood	Numb	Person	Tense	Voice	lemma	pos
+latina	Nom	_	2	_	_	Plur	_	_	_	latina	NOMcom
+qua	_	_	1	_	_	_	_	_	_	qua	ADVint
+bella	Nom	_	_	_	_	Plur	_	_	_	bellum	NOMcom
+sunt	_	_	1	_	Ind	Plur	3	Pres	Act	sum	VER
+
+sunt	_	_	1	_	Ind	Plur	3	Pres	Act	sum	VER
+bella	Nom	_	_	_	_	Plur	_	_	_	bellum	NOMcom
+sumus	_	_	1	_	Ind	Plur	1	Pres	Act	sum	VER

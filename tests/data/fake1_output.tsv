@@ -1,0 +1,13 @@
+form	lemma	POS	morph	treated_token
+latina	LATINA	NOMcom	Case=Nom|Numb=Plur	latina
+qua	QVA	ADVint	MORPH=empty	qua
+bella	BELLVM	NOMcom	Case=Nom|Numb=Plur	bella
+sunt	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
+,	,	PUNC	MORPH=empty	,
+,	,	PUNC	MORPH=empty	,
+.	.	PUNC	MORPH=empty	.
+sunt	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=3	sunt
+bella	BELLVM	NOMcom	Case=Nom|Numb=Plur	bella
+,	,	PUNC	MORPH=empty	,
+sumus	SVM	VER	Numb=Plur|Mood=Ind|Tense=Pres|Voice=Act|Person=1	sumus
+.	.	PUNC	MORPH=empty	.

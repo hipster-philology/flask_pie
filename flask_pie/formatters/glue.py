@@ -22,7 +22,7 @@ class GlueFormatter(Formatter):
             self.pos_tag = "pos"
         return self
 
-    def format_headers(self):
+    def get_headers(self):
         return GlueFormatter.HEADERS
 
     def format_line(self, token, tags, ignored=False):

@@ -72,9 +72,12 @@ class Formatter:  # Default is TSV
     def write_footer(self) -> str:
         return ""
 
+    def get_headers(self):
+        return ["token"] + self.tasks
+
     def write_headers(self)-> str:
         """ Format the headers """
-        return self.write_line(["token"] + self.tasks)
+        return self.write_line(self.get_headers())
 
 
 class MemoryzingTokenizer(object):

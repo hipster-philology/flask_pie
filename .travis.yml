@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.6"
+  -
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - pip install nose
+
+# command to run tests
+script:
+  - nosetests ./tests --with-coverage --cover-package=flask_pie --cover-xml --verbose --nologcapture
+after_success:
+  - coverage combine
+  - coveralls

@@ -11,7 +11,7 @@ class PieController(object):
     def __init__(self,
                  path: str = "/api", name: str = "nlp_pie", iterator: DataIterator=None, device: str = None,
                  batch_size: int = None, model_file: str = None, formatter_class: Formatter = None,
-                 headers = None, force_lower=False):
+                 headers = None, force_lower=False, disambiguation=None):
 
         self._bp: Blueprint = Blueprint(name, import_name=name, url_prefix=path)
         self.tokenizer: Tokenizer = None
@@ -37,6 +37,8 @@ class PieController(object):
         self.iterator = iterator
         if not iterator:
             self.iterator = DataIterator()
+
+        self.disambiguation = disambiguation
 
     def init_app(self, app: Flask):
         self._bp.add_url_rule("/", view_func=self.route, endpoint="main", methods=["GET", "POST", "OPTIONS"])
@@ -78,8 +80,7 @@ class PieController(object):
                 formatter_class=self.formatter_class
             )
 
-    @staticmethod
-    def build_response(data, iterator, lower, batch_size, tagger, formatter_class):
+    def build_response(self, data, iterator, lower, batch_size, tagger, formatter_class):
         header = False
         formatter = None
         for chunk in chunks(iterator(data, lower=lower), size=batch_size):
@@ -97,8 +98,12 @@ class PieController(object):
 
                 yield formatter.write_sentence_beginning()
 
+                if self.disambiguation:
+                    sent = self.disambiguation(sent, tasks)
+
                 reinsertion_index = 0
                 index = 0
+
                 for index, (token, tags) in enumerate(sent):
 
                     if reinsertion_index + index in sent_reinsertion:

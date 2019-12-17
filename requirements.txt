@@ -1,4 +1,4 @@
 flask
 regex
-nlp-pie==0.2.2
+nlp-pie==0.2.5
 autodisambiguator>=0.0.1,<1.0.0

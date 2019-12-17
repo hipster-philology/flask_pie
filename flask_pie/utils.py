@@ -1,5 +1,5 @@
 from pie.tagger import simple_tokenizer
-from typing import Callable, Iterable, List, Tuple
+from typing import Callable, Iterable, List, Tuple, Union
 import string
 import re
 
@@ -8,8 +8,18 @@ Tokenizer = Callable[[str, bool], Iterable[List[str]]]
 PUNKT = re.compile("^["+string.punctuation+"]+$")
 
 
+class ObjectCreator:
+    def __init__(self, cls, *args, **kwargs):
+        self.cls = cls
+        self.args = args
+        self.kwargs = kwargs
+
+    def create(self):
+        return self.cls(*self.args, **self.kwargs)
+
+
 class DataIterator:
-    def __init__(self, tokenizer: Tokenizer = None, remove_from_input: Callable = None):
+    def __init__(self, tokenizer: Union[ObjectCreator, Tokenizer] = None, remove_from_input: Callable = None):
         """ Iterator used to parse the text and returns bits to tag
 
         :param tokenizer: Tokenizer
@@ -39,6 +49,16 @@ class DataIterator:
                 clean.append(token)
         return clean, removed
 
+    def get_tokenizer(self):
+        if isinstance(self.tokenizer, ObjectCreator):
+            return self.tokenizer.create()
+        return self.tokenizer
+
+    def get_remover(self):
+        if isinstance(self.remove_from_input, ObjectCreator):
+            return self.remove_from_input.create()
+        return self.remove_from_input
+
     def __call__(self, data: str, lower: bool = False) -> Iterable[Tuple[List[str], int]]:
         """ Default iter data takes a text, an option to make lower
         and yield lists of words along with the length of the list
@@ -47,8 +67,10 @@ class DataIterator:
         :param lower: Whether or not to lower the text
         :yields: (Sentence as a list of word, Size of the sentence)
         """
-        for sentence in self.tokenizer(data, lower=lower):
-            clean_sentence, removed_from_input = self.remove_from_input(sentence)
+        tokenizer = self.get_tokenizer()
+        remover = self.get_remover()
+        for sentence in tokenizer(data, lower=lower):
+            clean_sentence, removed_from_input = remover(sentence)
             yield clean_sentence, len(clean_sentence), removed_from_input
 
 

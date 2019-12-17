@@ -11,7 +11,7 @@ class PieController(object):
     def __init__(self,
                  path: str = "/api", name: str = "nlp_pie", iterator: DataIterator = None, device: str = None,
                  batch_size: int = None, model_file: str = None, formatter_class: Formatter = None,
-                 headers=None, force_lower=False, disambiguation=None):
+                 headers=None, force_lower=False, disambiguation=None, get_iterator_and_formatter=None):
 
         self._bp: Blueprint = Blueprint(name, import_name=name, url_prefix=path)
         self.tokenizer: Tokenizer = None
@@ -38,7 +38,13 @@ class PieController(object):
         if not iterator:
             self.iterator = DataIterator()
 
+        self._get_iterator_and_formatter = get_iterator_and_formatter
         self.disambiguation = disambiguation
+
+    def get_iterator_and_formatter(self):
+        if self._get_iterator_and_formatter:
+            return self._get_iterator_and_formatter()
+        return self.iterator, self.formatter_class
 
     def init_app(self, app: Flask):
         self._bp.add_url_rule("/", view_func=self.route, endpoint="main", methods=["GET", "POST", "OPTIONS"])
@@ -71,13 +77,14 @@ class PieController(object):
         if not data:
             yield ""
         else:
+            iter_fn, formatter = self.get_iterator_and_formatter()
             yield from self.build_response(
                 data,
                 lower=lower,
-                iterator=self.iterator,
+                iterator=iter_fn,
                 batch_size=self.batch_size,
                 tagger=self.tagger,
-                formatter_class=self.formatter_class
+                formatter_class=formatter
             )
 
     def reinsert_full(self, formatter, sent_reinsertion, tasks):

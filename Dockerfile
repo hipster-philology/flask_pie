@@ -8,5 +8,4 @@ RUN apt-get update && apt-get install -y zip git
 RUN pip3 install --upgrade pip setuptools
 
 # Install Pie and Pie Webapp requirements
-RUN pip3 install flask_pie==0.0.7 https://download.pytorch.org/whl/cpu/torch-1.1.0-cp36-cp36m-linux_x86_64.whl gunicorn
-
+RUN pip3 install flask_pie==0.1.0 https://download.pytorch.org/whl/cpu/torch-1.1.0-cp36-cp36m-linux_x86_64.whl gunicorn

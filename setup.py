@@ -19,7 +19,7 @@ DESCRIPTION = "Web API for NLP tagger PIE"
 URL = 'https://github.com/ponteineptique/flask_pie'
 AUTHOR = 'Thibault Clérice'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 # What packages are required for this module to be executed?
 

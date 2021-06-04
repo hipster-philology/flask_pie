@@ -1,4 +1,4 @@
 flask
 regex
-nlp-pie<=0.4.0
-pie-extended<=0.1.0
+papie
+pie-extended

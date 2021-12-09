@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Clérice"
+  given-names: "Thibault"
+  orcid: "http://orcid.org/0000-0003-1852-9204"
+title: "flask_pie, a pie-extended wrapper for Flask"
+version: 0.1.0
+date-released: 2020-04-28
+url: "https://github.com/hipster-philology/flask_pie"
